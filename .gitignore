@@ -1,0 +1,10 @@
+node_modules/
+build/
+public/
+.idea/
+npm-debug.log
+config/production.js
+config/development.js
+logs/
+aql/
+test_data/

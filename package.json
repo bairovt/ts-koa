@@ -1,0 +1,28 @@
+{
+  "name": "ts-koa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ts-srv.js",
+  "dependencies": {
+    "arangojs": "^6.10.0",
+    "config": "^3.2.2",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "kcors": "^2.2.2",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-convert": "^1.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^7.4.0",
+    "lodash": "^4.17.15",
+    "nodemailer": "^6.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon ./ts-srv.js",
+    "start": "node ts-srv.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tumen",
+  "license": "ISC"
+}
