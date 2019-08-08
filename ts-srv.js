@@ -23,7 +23,7 @@ app.use(require('./middleware/authentication'));
 const router = new Router();
 router
   .use('/api/users', require('./api/users'))
-  // .use('/api/person', require('./api/person'))
+  .use('/api/providers', require('./api/providers'))
   .use('/api/orders', require('./api/orders'));
 
 app.use(router.routes());

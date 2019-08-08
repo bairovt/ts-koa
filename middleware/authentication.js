@@ -6,7 +6,7 @@ const _ = require('lodash');
 
 /* authentication middleware */
 module.exports = async function (ctx, next) {
-  if (['/api/users', '/api/users/login', '/api/users/add'].includes(ctx.request.url)) {
+  if (['/api/users/login'].includes(ctx.request.url)) {
     return await next();
   }
   const authHeader = ctx.request.header.authorization;

@@ -5,7 +5,7 @@ const aql = require('arangojs').aql;
 const router = require('koa-router')();
 const jwt = require('jsonwebtoken');
 const secretKey = require('config').get('secretKey');
-const allowFor = require('../middleware/check-permission');
+const authorize = require('../middleware/authorize');
 const User = require('../models/User');
 
 async function login(ctx) {
@@ -67,6 +67,6 @@ async function getUsers(ctx) {
 router
   .get('/', getUsers)
   .post('/login', login)
-  .post('/add', allowFor(['admin']), addUser);
+  .post('/add', authorize(['admin']), addUser);
 
 module.exports = router.routes();

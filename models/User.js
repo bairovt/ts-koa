@@ -4,13 +4,12 @@ const crypto = require('crypto');
 const Joi = require('joi');
 
 class User {
-  constructor(person) {
-    this._key = person._key;
-    this._id = person._id;
-    this.name = person.name;
-    this.roles = person.user.roles || []; // 'admin', 'manager', 'inviter'
-    this.status = person.user.status;
-    this.fullname = `${person.name} ${person.surname}`;
+  constructor(user) {
+    this._key = user._key;
+    this._id = user._id;
+    this.name = user.name;
+    this.roles = user.roles || []; // 'admin', 'manager', 'inviter'
+    this.status = user.status;
   }
 
   static get schema() {
