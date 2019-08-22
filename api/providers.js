@@ -43,14 +43,15 @@ async function getProvider(ctx) {
   }
 }
 
-async function addProvider(ctx) {
+async function createProvider(ctx) {
   const {
     providerData
   } = ctx.request.body;
-  providerData.createdBy = ctx.state.user._id;
-  providerData.createdAt = new Date();
+  let validProviderData = Joi.attempt(providerData, providerSchema);
+  validProviderData.createdBy = ctx.state.user._id;
+  validProviderData.createdAt = new Date();
   const providersCollection = db.collection('Providers');
-  const newProvider = await providersCollection.save(providerData);
+  const newProvider = await providersCollection.save(validProviderData);
   ctx.body = {
     newProviderKey: newProvider._key
   };
@@ -93,7 +94,7 @@ async function deleteProvider(ctx) {
 }
 
 router
-  .post('/', authorize(['admin']), addProvider)
+  .post('/', authorize(['admin']), createProvider)
   .get('/', findProviders)
   .get('/:_key', getProvider)
   .patch('/:_key', authorize(['admin']), updateProvider)
