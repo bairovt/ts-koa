@@ -70,7 +70,7 @@ async function updateProvider(ctx) {
   let validProviderData = Joi.attempt(providerData, providerSchema); // {stripUnknown: true}
   validProviderData.updatedBy = user._id;
   validProviderData.updatedAt = new Date();
-  await providersCollection.update(provider._id, validProviderData);
+  await providersCollection.update(_key, validProviderData);
   ctx.body = {
     result: 'OK'
   };
