@@ -16,8 +16,13 @@ const router = new Router();
 // });
 
 async function filterOrders(ctx, next) {
+  const filter = {
+    status: ctx.query.status || '',
+    meat: ctx.query.meat || ''
+  };
   let orders = await db.query(aql`FOR order IN Orders
-  // FILTER rod.type == 'subethnos'
+  FILTER order.status == ${filter.status}
+  FILTER ${!!filter.meat} ? order.meat == ${filter.meat} : true
   SORT order.date ASC
   RETURN order`).then(cursor => cursor.all());
   ctx.body = {
@@ -45,6 +50,7 @@ async function createOrder(ctx) {
   const validOrder = orderData;
   validOrder.createdBy = ctx.state.user._id;
   validOrder.createdAt = new Date();
+  validOrder.status = 'CREATED';
   const result = await ordersCollection.save(validOrder, {
     returnNew: true
   });

@@ -8,3 +8,5 @@ config/development.js
 logs/
 aql/
 test_data/
+
+*.temp.js
