@@ -18,11 +18,13 @@ const router = new Router();
 async function filterOrders(ctx, next) {
   const filter = {
     status: ctx.query.status || '',
-    meat: ctx.query.meat || ''
+    meat: ctx.query.meat || '',
+    provider: ctx.query.provider || ''
   };
   let orders = await db.query(aql`FOR order IN Orders
   FILTER order.status == ${filter.status}
   FILTER ${!!filter.meat} ? order.meat == ${filter.meat} : true
+  FILTER ${!!filter.provider} ? order.provider == ${'Providers/' + filter.provider} : true
   SORT order.date ASC
   RETURN order`).then(cursor => cursor.all());
   ctx.body = {
