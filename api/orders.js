@@ -90,11 +90,29 @@ async function updateOrder(ctx) { // key
   ctx.body = {}
 }
 
+async function deliverOrder(ctx) { // key
+  const {
+    _key
+  } = ctx.params;
+  const ordersCollection = db.collection('Orders');
+  const order = ordersCollection.document(_key);
+  if (!order) ctx.throw(404, 'Document not found');
+  const orderData = {
+    kgFact: ctx.request.body.kgFact,
+    status: 'DELIVERED',
+    updatedAt: new Date(),
+    updatedBy: ctx.state.user._id
+  };
+  await ordersCollection.update(_key, orderData);
+  ctx.body = {}
+}
+
 router
   .get('/', filterOrders)
   .post('/', createOrder)
   .get('/:_key', getOrder)
   .delete('/:_key', deleteOrder)
   .patch('/:_key', updateOrder)
+  .post('/:_key/deliver', deliverOrder)
 
 module.exports = router.routes();
