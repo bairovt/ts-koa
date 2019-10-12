@@ -7,13 +7,14 @@ const _ = require('lodash');
 
 const router = new Router();
 
-// const orderSchema = Joi.object().keys({
-//   name: Joi.string().trim().min(2).max(100).required(),
-//   tel: Joi.string().trim().min(5).max(20).empty('').required(),
-//   place: Joi.string().trim().min(1).max(255).empty('').allow(null),
-//   comment: Joi.string().trim().min(1).max(3000).empty('').allow(null),
-//   // createdBy: Joi.string().trim().regex(/^[a-zA-Z0-9]+$/).min(3).max(30).allow(null),
-// });
+const orderSchema = Joi.object().keys({
+  date: Joi.date().iso().required(),
+  meat: Joi.string().valid("BEEF", "PORK", "MUTTON", "HORSE").required(),
+  kg: Joi.number().required(),
+  comment: Joi.string().trim().min(1).max(3000).empty('').allow(null),
+  provider: Joi.string().trim().regex(/^[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/).min(3).max(50).allow(null),
+  status: Joi.string().valid("CREATED", "DELIVERED", "FAILED")
+});
 
 async function filterOrders(ctx, next) {
   const filter = {
@@ -48,8 +49,7 @@ async function createOrder(ctx) {
   const {
     orderData
   } = ctx.request.body;
-  // const validOrder = Joi.attempt(orderData, orderSchema);
-  const validOrder = orderData;
+  const validOrder = Joi.attempt(orderData, orderSchema);
   validOrder.createdBy = ctx.state.user._id;
   validOrder.createdAt = new Date();
   validOrder.status = 'CREATED';
@@ -61,7 +61,7 @@ async function createOrder(ctx) {
   };
 }
 
-async function deleteOrder(ctx) { // key
+async function deleteOrder(ctx) {
   const {
     _key
   } = ctx.params;
@@ -72,7 +72,7 @@ async function deleteOrder(ctx) { // key
   ctx.body = {}
 }
 
-async function updateOrder(ctx) { // key
+async function updateOrder(ctx) {
   const {
     _key
   } = ctx.params;

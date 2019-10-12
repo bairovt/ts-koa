@@ -15,8 +15,6 @@ module.exports = async function (ctx, next) {
   try {
     await next();
   } catch (error) {
-    // todo: email errors
-
     if (error.status) {
       await logError(error.status, ctx, error);
       ctx.status = error.status;
@@ -37,9 +35,6 @@ module.exports = async function (ctx, next) {
           return ctx.body = {
             message: error.message
           }
-        // return ctx.body = {
-        //   message: error.details
-        // }
         case 'ArangoError':
           switch (error.code) {
             case 404: // ArangoError
@@ -47,6 +42,12 @@ module.exports = async function (ctx, next) {
               ctx.status = 404;
               return ctx.body = {
                 message: 'db: document not found'
+              }
+            case 409: // ArangoError
+              await logError(400, ctx, error);
+              ctx.status = 400;
+              return ctx.body = {
+                message: 'db: unique constraint violated'
               }
           }
       }
