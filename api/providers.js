@@ -97,7 +97,7 @@ router
   .post('/', authorize(['admin']), createProvider)
   .get('/', findProviders)
   .get('/:_key', getProvider)
-  .patch('/:_key', authorize(['admin']), updateProvider)
+  .post('/:_key', authorize(['admin']), updateProvider)
   .delete('/:_key', authorize(['admin']), deleteProvider)
 
 module.exports = router.routes();

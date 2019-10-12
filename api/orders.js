@@ -90,7 +90,7 @@ async function updateOrder(ctx) { // key
   ctx.body = {}
 }
 
-async function deliverOrder(ctx) { // key
+async function deliverOrder(ctx) {
   const {
     _key
   } = ctx.params;
@@ -107,12 +107,29 @@ async function deliverOrder(ctx) { // key
   ctx.body = {}
 }
 
+async function failOrder(ctx) {
+  const {
+    _key
+  } = ctx.params;
+  const ordersCollection = db.collection('Orders');
+  const order = ordersCollection.document(_key);
+  if (!order) ctx.throw(404, 'Document not found');
+  const orderData = {
+    status: 'FAILED',
+    updatedAt: new Date(),
+    updatedBy: ctx.state.user._id
+  };
+  await ordersCollection.update(_key, orderData);
+  ctx.body = {}
+}
+
 router
   .get('/', filterOrders)
   .post('/', createOrder)
   .get('/:_key', getOrder)
   .delete('/:_key', deleteOrder)
-  .patch('/:_key', updateOrder)
+  .post('/:_key', updateOrder)
   .post('/:_key/deliver', deliverOrder)
+  .post('/:_key/fail', failOrder)
 
 module.exports = router.routes();
