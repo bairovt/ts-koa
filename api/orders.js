@@ -4,17 +4,9 @@ const aql = require('arangojs').aql;
 const Router = require('koa-router');
 const Joi = require('joi');
 const _ = require('lodash');
+const orderSchema = require('../lib/schemas').orderSchema;
 
 const router = new Router();
-
-const orderSchema = Joi.object().keys({
-  date: Joi.date().iso().required(),
-  meat: Joi.string().valid("BEEF", "PORK", "MUTTON", "HORSE").required(),
-  kg: Joi.number().required(),
-  comment: Joi.string().trim().min(1).max(3000).empty('').allow(null),
-  provider: Joi.string().trim().regex(/^[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/).min(3).max(50).allow(null),
-  status: Joi.string().valid("CREATED", "DELIVERED", "FAILED")
-});
 
 async function filterOrders(ctx, next) {
   const filter = {
