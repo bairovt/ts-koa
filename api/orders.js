@@ -75,10 +75,10 @@ async function updateOrder(ctx) {
   const order = ordersCollection.document(_key);
   if (!order) ctx.throw(404, 'Document not found');
   _.merge(order, orderData);
-  // Joi.attempt(order, orderSchema);
-  orderData.updatedAt = new Date();
-  orderData.updatedBy = ctx.state.user._id;
-  await ordersCollection.update(_key, orderData);
+  const validOrderData = Joi.attempt(orderData, orderSchema);
+  validOrderData.updatedAt = new Date();
+  validOrderData.updatedBy = ctx.state.user._id;
+  await ordersCollection.update(_key, validOrderData);
   ctx.body = {}
 }
 
@@ -108,6 +108,7 @@ async function failOrder(ctx) {
   if (!order) ctx.throw(404, 'Document not found');
   const orderData = {
     status: 'FAILED',
+    kgFact: 0,
     updatedAt: new Date(),
     updatedBy: ctx.state.user._id
   };
