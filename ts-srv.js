@@ -24,7 +24,8 @@ const router = new Router();
 router
   .use('/api/users', require('./api/users'))
   .use('/api/providers', require('./api/providers'))
-  .use('/api/orders', require('./api/orders'));
+  .use('/api/orders', require('./api/orders'))
+  .use('/api/reports', require('./api/reports'));
 
 app.use(router.routes());
 
