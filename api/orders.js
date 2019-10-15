@@ -86,11 +86,16 @@ async function deliverOrder(ctx) {
   const {
     _key
   } = ctx.params;
+  const kgFact = ctx.request.body.kgFact;
+  if (Number.isFinite(kgFact) && kgFact > 0) {
+  } else {
+    ctx.throw(400, 'Wrong data: kgFact')
+  };
   const ordersCollection = db.collection('Orders');
   const order = ordersCollection.document(_key);
   if (!order) ctx.throw(404, 'Document not found');
   const orderData = {
-    kgFact: ctx.request.body.kgFact,
+    kgFact,
     status: 'DELIVERED',
     updatedAt: new Date(),
     updatedBy: ctx.state.user._id
