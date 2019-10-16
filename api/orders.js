@@ -20,6 +20,7 @@ async function filterOrders(ctx, next) {
     FILTER ${!!filter.provider} ? o.provider == ${'Providers/' + filter.provider} : true
     SORT o.date ASC
     RETURN {
+      _id: o._id,
       _key: o._key,
       date: o.date,
       meat: o.meat,
@@ -42,6 +43,7 @@ async function getOrder(ctx, next) {
   let order = await db.query(aql`FOR o IN Orders
     FILTER o._key == ${_key}    
     RETURN {
+      _id: o._id,
       _key: o._key,
       date: o.date,
       meat: o.meat,
