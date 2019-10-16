@@ -14,12 +14,21 @@ async function filterOrders(ctx, next) {
     meat: ctx.query.meat || '',
     provider: ctx.query.provider || ''
   };
-  let orders = await db.query(aql`FOR order IN Orders
-  FILTER order.status == ${filter.status}
-  FILTER ${!!filter.meat} ? order.meat == ${filter.meat} : true
-  FILTER ${!!filter.provider} ? order.provider == ${'Providers/' + filter.provider} : true
-  SORT order.date ASC
-  RETURN order`).then(cursor => cursor.all());
+  let orders = await db.query(aql`FOR o IN Orders
+    FILTER o.status == ${filter.status}
+    FILTER ${!!filter.meat} ? o.meat == ${filter.meat} : true
+    FILTER ${!!filter.provider} ? o.provider == ${'Providers/' + filter.provider} : true
+    SORT o.date ASC
+    RETURN {
+      _key: o._key,
+      date: o.date,
+      meat: o.meat,
+      provider: DOCUMENT(o.provider),
+      kg: o.kg,
+      kgFact: o.kgFact,
+      status: o.status,
+      createdBy: o.createdBy
+    }`).then(cursor => cursor.all());
   ctx.body = {
     orders
   };
@@ -29,8 +38,21 @@ async function getOrder(ctx, next) {
   const {
     _key
   } = ctx.params;
-  const ordersCollection = db.collection('Orders');
-  const order = await ordersCollection.document(_key);
+
+  let order = await db.query(aql`FOR o IN Orders
+    FILTER o._key == ${_key}    
+    RETURN {
+      _key: o._key,
+      date: o.date,
+      meat: o.meat,
+      provider: DOCUMENT(o.provider),
+      kg: o.kg,
+      kgFact: o.kgFact,
+      status: o.status,
+      createdBy: o.createdBy
+    }`).then(cursor => cursor.next());
+
+  if (!order) ctx.throw(404, 'Document not found');
   ctx.body = {
     order
   };
