@@ -9,14 +9,11 @@ const providerSchema = require('../lib/schemas').providerSchema;
 const router = new Router();
 
 async function findProviders(ctx) {
-  let {
-    search
-  } = ctx.query;
-
+  let search = ctx.query.search || '';
   let providers = await db.query(
     aql`FOR p IN Providers
-          FILTER REGEX_TEST(p.name, ${search}, true) OR
-            REGEX_TEST(p.tel, ${search}, true)
+          FILTER ${!search} ? true : (REGEX_TEST(p.name, ${search}, true) OR
+            REGEX_TEST(p.tel, ${search}, true))
           SORT p.name ASC
           RETURN p`)
     .then(cursor => {
