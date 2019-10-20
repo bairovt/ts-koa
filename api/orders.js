@@ -28,6 +28,7 @@ async function filterOrders(ctx, next) {
       kg: o.kg,
       kgFact: o.kgFact,
       status: o.status,
+      comment: o.comment,
       createdBy: o.createdBy
     }`).then(cursor => cursor.all());
   ctx.body = {
@@ -51,6 +52,7 @@ async function getOrder(ctx, next) {
       kg: o.kg,
       kgFact: o.kgFact,
       status: o.status,
+      comment: o.comment,
       createdBy: o.createdBy
     }`).then(cursor => cursor.next());
 
