@@ -17,7 +17,9 @@
     "lodash": "^4.17.15",
     "nodemailer": "^6.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
   "scripts": {
     "dev": "NODE_ENV=development nodemon ./ts-srv.js",
     "start": "node ts-srv.js",
